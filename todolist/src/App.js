@@ -92,7 +92,7 @@ class App extends Component {
             <div className={isDisplayTaskForm?'col-xs-8 col-sm-8 col-md-8 col-lg-8':'col-xs-12 col-sm-12 col-md-12 col-lg-12'}>
               
               <button type="button" className="btn btn-primary" onClick={this.onHandleAddTask}><span className="fa fa-plus mr-5"></span> Add task</button> &nbsp;
-              <button type="button" className="btn btn-danger" onClick={this.onGenerateData}> Generate Data</button>
+             
            
             <hr/>
             <div className="row mt-15">
