@@ -19,6 +19,7 @@ class TaskForm extends Component {
                <select className="form-control" required="required">
                  <option value="1">Active</option>
                  <option value="0">Hide</option>
+                 
                </select>
                <br/>
                <div className="text-center">

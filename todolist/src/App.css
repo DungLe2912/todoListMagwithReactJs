@@ -58,6 +58,9 @@
   float: right;
   cursor: pointer;
 }
+.text-center{
+  float: center;
+}
 .text-right:hover{
  color: red;
 }
