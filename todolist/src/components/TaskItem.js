@@ -1,15 +1,20 @@
 import React, { Component } from 'react';
 import '../App.css'
 class TaskItem extends Component {
+    onUpdateStatus=(value)=>{
+        this.props.onUpdateStatus(value)
+    }
     render() {
         var {tasks,index}=this.props;
+       
         return (
             <tr>
             <td className="text-center">{index+1}</td>
             <td>{tasks.name}</td>
             <td className="text-center">
-                <span className={tasks.status===true?'label label-primary':'label label-danger'}>
+                <span className={tasks.status===true?'label label-primary pointer':'label label-danger pointer'} onClick={()=>this.onUpdateStatus(tasks.id)}>
                             {tasks.status===true?'Active':'Hide'}
+                            
                         </span>
             </td>
             <td className="text-center">

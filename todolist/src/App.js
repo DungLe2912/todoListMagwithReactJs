@@ -70,6 +70,27 @@ class App extends Component {
    });
    localStorage.setItem('tasks',JSON.stringify(tasks)); 
   }
+  onUpdateStatus=(value)=>{
+    var {tasks}=this.state;
+    var index=this.findIndex(value);
+    if(index!==-1){
+      tasks[index].status=!tasks[index].status;
+      this.setState({
+        tasks:tasks
+      });
+      localStorage.setItem('tasks',JSON.stringify(tasks)); 
+    }
+  }
+  findIndex=(id)=>{
+    var{tasks}=this.state;
+    var result=-1;
+    tasks.forEach((tasks,index)=>{
+      if(tasks.id===id){
+        result= index;
+      }
+    });
+    return result;
+  }
   render() {
     var {tasks,isDisplayTaskForm}=this.state;
     var elmTaskForm= isDisplayTaskForm?<TaskForm onCloseForm={this.onCloseForm} onSubmit={this.onSubmit}/>:''
@@ -100,7 +121,7 @@ class App extends Component {
             </div>
             <hr/>
             <div className="row mt-15">
-                  <TaskList tasks={tasks}/>
+                  <TaskList tasks={tasks} onUpdateStatus={this.onUpdateStatus}/>
              </div>
             
             </div>

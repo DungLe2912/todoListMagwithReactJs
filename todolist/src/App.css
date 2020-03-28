@@ -58,6 +58,9 @@
   float: right;
   cursor: pointer;
 }
+.pointer{
+  cursor: pointer;
+}
 .text-center{
   float: center;
 }
