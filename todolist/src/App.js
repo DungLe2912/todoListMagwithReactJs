@@ -81,6 +81,17 @@ class App extends Component {
       localStorage.setItem('tasks',JSON.stringify(tasks)); 
     }
   }
+  onDelete=(value)=>{
+    var {tasks}=this.state;
+    var index=this.findIndex(value);
+    if(index!==-1){
+      tasks.splice(index, 1);
+      this.setState({
+        tasks:tasks
+      });
+      localStorage.setItem('tasks',JSON.stringify(tasks)); 
+    }
+  }
   findIndex=(id)=>{
     var{tasks}=this.state;
     var result=-1;
@@ -121,7 +132,7 @@ class App extends Component {
             </div>
             <hr/>
             <div className="row mt-15">
-                  <TaskList tasks={tasks} onUpdateStatus={this.onUpdateStatus}/>
+                  <TaskList tasks={tasks} onUpdateStatus={this.onUpdateStatus} onDelete={this.onDelete}/>
              </div>
             
             </div>
