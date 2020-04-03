@@ -11,7 +11,11 @@ class App extends Component {
       tasks:[],//id,name,status
       isDisplayTaskForm:false,
       isDisplayEditForm:false,
-      editTask:null
+      editTask:null,
+      filter:{
+        name:'',
+        status:-1
+      }
     }
   }
   componentWillMount(){
@@ -109,8 +113,32 @@ class App extends Component {
     });
     return result;
   }
+  onFilter=(filterName,filterStatus)=>{
+    filterStatus=parseInt(filterStatus,10);
+    this.setState({
+      filter:{
+        name:filterName.toLowerCase(),
+        status:filterStatus
+      }
+    })
+  }
   render() {
-    var {tasks,isDisplayTaskForm,isDisplayEditForm}=this.state;
+    var {tasks,isDisplayTaskForm,isDisplayEditForm,filter}=this.state;
+    if(filter){
+      if(filter.name){
+        tasks=tasks.filter((task)=>{
+          return task.name.toLowerCase().indexOf(filter.name)!==-1;
+        })
+      }
+      tasks=tasks.filter((task)=>{
+        if(filter.status===-1){
+          return task;
+        }
+        else{
+          return task.status===(filter.status===1?true:false);
+        }
+      })
+    }
     var elmTaskForm= (isDisplayTaskForm||isDisplayEditForm)?<TaskForm editTask={this.state.editTask} onCloseForm={this.onCloseForm} onSubmit={this.onSubmit}  isDisplayEditForm={this.state.isDisplayEditForm} />:'';
     
     return (
@@ -140,7 +168,7 @@ class App extends Component {
             </div>
             <hr/>
             <div className="row mt-15">
-                  <TaskList tasks={tasks} onDisplayEditTask={this.onDisplayEditTask} onUpdateStatus={this.onUpdateStatus} onDelete={this.onDelete} onOpenEditForm={this.onOpenEditForm}/>
+                  <TaskList tasks={tasks} onFilter={this.onFilter} onDisplayEditTask={this.onDisplayEditTask} onUpdateStatus={this.onUpdateStatus} onDelete={this.onDelete} onOpenEditForm={this.onOpenEditForm}/>
              </div>
             
             </div>
