@@ -4,6 +4,7 @@ class TaskForm extends Component {
   constructor(props) {
     super(props);
     this.state={
+      id:'',
       name:'',
       status:false
 
@@ -33,16 +34,44 @@ class TaskForm extends Component {
   }
   onHandleClear=()=>{
     this.setState({
+      id:'',
       name:'',
       status:false
     })
+  }
+  componentWillMount(){
+    if(this.props.isDisplayEditForm){
+      this.setState({
+        id: this.props.editTask.id,
+        name: this.props.editTask.name,
+        status:this.props.editTask.status
+      });
+    }
+  }
+  componentWillReceiveProps(nextProps){
+    if(nextProps){
+      if(nextProps.editTask){
+        this.setState({
+          id: nextProps.editTask.id,
+          name: nextProps.editTask.name,
+          status:nextProps.editTask.status
+        });
+      }
+      else{
+        this.setState({
+          id:'',
+          name: '',
+          status:false
+        });
+      }
+    }
   }
     render() {
     
         return (
             <div className="panel panel-warning">
             <div className="panel-heading">
-              <h3 className="panel-title">Add task <span className="fa fa-remove text-right" onClick={()=>this.onCloseForm(false)}></span></h3>
+              <h3 className="panel-title">{this.props.isDisplayEditForm?'Edit form' :'Add task'} <span className="fa fa-remove text-right" onClick={()=>this.onCloseForm(false)}></span></h3>
             </div>
             <div className="panel-body">
              
@@ -60,7 +89,7 @@ class TaskForm extends Component {
                </select>
                <br/>
                <div className="text-center">
-               <button type="submit" className="btn btn-warning"><span className="fa fa-plus mr-5"></span>Add</button>&nbsp;
+               <button type="submit" className="btn btn-warning"><span className={this.props.isDisplayEditForm?"fa fa-floppy-o mr-5" :"fa fa-plus mr-5"}></span>{this.props.isDisplayEditForm?'Save' :'Add'}</button>&nbsp;
                   <button type="button" className="btn btn-danger" onClick={this.onHandleClear}><span className="fa fa-remove mr-5" aria-hidden="true" ></span>Cancel</button>
                </div>
              </form>

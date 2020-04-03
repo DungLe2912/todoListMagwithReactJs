@@ -9,7 +9,9 @@ class App extends Component {
     super(props);
     this.state={
       tasks:[],//id,name,status
-      isDisplayTaskForm:false
+      isDisplayTaskForm:false,
+      isDisplayEditForm:false,
+      editTask:null
     }
   }
   componentWillMount(){
@@ -20,30 +22,6 @@ class App extends Component {
       })
     }
   }
-  // onGenerateData=()=>{
-  //   var tasks=[
-  //     {
-  //       id:this.randomID(),
-  //       name:'Action1',
-  //       status:true
-  //     },
-  //     {
-  //       id:this.randomID(),
-  //       name:'Action2',
-  //       status:false
-  //     },
-  //     {
-  //       id:this.randomID(),
-  //       name:'Action3',
-  //       status:true
-  //     }
-  //   ];
-  //   this.setState({
-  //     tasks:tasks
-  //   })
-  //   localStorage.setItem('tasks',JSON.stringify(tasks)); 
-  //   console.log(tasks);
-  // }
   
   s4(){
     return Math.floor((1+Math.random())*0x10000).toString(16).substring(1);
@@ -53,22 +31,38 @@ class App extends Component {
   }
   onHandleAddTask=()=>{
     this.setState({
-      isDisplayTaskForm:true
+      isDisplayTaskForm:true,
+      isDisplayEditForm:false,
+      editTask:null
     })
   }
   onCloseForm=(value)=>{
    this.setState({
-     isDisplayTaskForm:value
+     isDisplayTaskForm:false,
+     isDisplayEditForm:false,
+     editTask:null
    })
   }
   onSubmit=(data)=>{
-    var tasks=this.state.tasks;
-   data.id=this.randomID();
-   tasks.push(data);
+    var {tasks}=this.state;
+   if(data.id!==''){
+    var index=this.findIndex(data.id);
+    if(index!==-1){
+      tasks[index]=data;
+    }
+    }
+   else{
+    data.id=this.randomID();
+    tasks.push(data);
+   
+   }
    this.setState({
-     tasks:tasks
-   });
-   localStorage.setItem('tasks',JSON.stringify(tasks)); 
+    isDisplayTaskForm:true,
+    isDisplayEditForm:false,
+    editTask:null,
+    tasks:tasks
+  });
+  localStorage.setItem('tasks',JSON.stringify(tasks)); 
   }
   onUpdateStatus=(value)=>{
     var {tasks}=this.state;
@@ -82,6 +76,7 @@ class App extends Component {
     }
   }
   onDelete=(value)=>{
+    this.onCloseForm();
     var {tasks}=this.state;
     var index=this.findIndex(value);
     if(index!==-1){
@@ -91,6 +86,18 @@ class App extends Component {
       });
       localStorage.setItem('tasks',JSON.stringify(tasks)); 
     }
+  }
+  onOpenEditForm=(value)=>{
+   this.setState({
+     isDisplayEditForm:value,
+     isDisplayTaskForm:false
+   });
+ // console.log(value);
+  }
+  onDisplayEditTask=(data)=>{
+    this.setState({
+      editTask:data
+    })
   }
   findIndex=(id)=>{
     var{tasks}=this.state;
@@ -103,8 +110,9 @@ class App extends Component {
     return result;
   }
   render() {
-    var {tasks,isDisplayTaskForm}=this.state;
-    var elmTaskForm= isDisplayTaskForm?<TaskForm onCloseForm={this.onCloseForm} onSubmit={this.onSubmit}/>:''
+    var {tasks,isDisplayTaskForm,isDisplayEditForm}=this.state;
+    var elmTaskForm= (isDisplayTaskForm||isDisplayEditForm)?<TaskForm editTask={this.state.editTask} onCloseForm={this.onCloseForm} onSubmit={this.onSubmit}  isDisplayEditForm={this.state.isDisplayEditForm} />:'';
+    
     return (
       
       <div className="container">
@@ -115,13 +123,13 @@ class App extends Component {
         
           
           <div className="row">
-            <div className={isDisplayTaskForm?'col-xs-4 col-sm-4 col-md-4 col-lg-4':''}>
+            <div className={(isDisplayTaskForm||isDisplayEditForm)?'col-xs-4 col-sm-4 col-md-4 col-lg-4':''}>
              {elmTaskForm}
              
             </div>
 
             
-            <div className={isDisplayTaskForm?'col-xs-8 col-sm-8 col-md-8 col-lg-8':'col-xs-12 col-sm-12 col-md-12 col-lg-12'}>
+            <div className={(isDisplayTaskForm||isDisplayEditForm)?'col-xs-8 col-sm-8 col-md-8 col-lg-8':'col-xs-12 col-sm-12 col-md-12 col-lg-12'}>
               
               <button type="button" className="btn btn-primary" onClick={this.onHandleAddTask}><span className="fa fa-plus mr-5"></span> Add task</button> &nbsp;
              
@@ -132,7 +140,7 @@ class App extends Component {
             </div>
             <hr/>
             <div className="row mt-15">
-                  <TaskList tasks={tasks} onUpdateStatus={this.onUpdateStatus} onDelete={this.onDelete}/>
+                  <TaskList tasks={tasks} onDisplayEditTask={this.onDisplayEditTask} onUpdateStatus={this.onUpdateStatus} onDelete={this.onDelete} onOpenEditForm={this.onOpenEditForm}/>
              </div>
             
             </div>
