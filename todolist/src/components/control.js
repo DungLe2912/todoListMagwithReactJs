@@ -4,11 +4,14 @@ import Search from './search'
 import Sort from './sort'
 import '../App.css'
 class control extends Component {
+   
+    
     render() {
+    
         return (
             <div>
                 {/*Search*/}
-                <Search/>
+                <Search onSearch={this.props.onSearch}/>
                  {/*Sort*/}
                  <Sort/>
             </div>
