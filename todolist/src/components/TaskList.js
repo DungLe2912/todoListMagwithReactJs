@@ -34,6 +34,15 @@ class TaskList extends Component {
           [name]:value
         })
       }
+      onFilter=(filterName,filterStatus)=>{
+        filterStatus=parseInt(filterStatus,10);
+        this.setState({
+          filter:{
+            name:filterName.toLowerCase(),
+            status:filterStatus
+          }
+        })
+      }
     render() {
         var {tasks}=this.props;
         var elmTasks=tasks.map((tasks,index)=>{
