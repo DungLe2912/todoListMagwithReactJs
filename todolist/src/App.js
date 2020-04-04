@@ -1,9 +1,10 @@
 /* eslint-disable jsx-a11y/anchor-is-valid */
 import './App.css';
 import React, { Component } from 'react';
-import TaskForm from './components/TaskForm'
-import Control from './components/control'
-import TaskList from './components/TaskList'
+import TaskForm from './components/TaskForm';
+import Control from './components/control';
+import TaskList from './components/TaskList';
+import _ from 'lodash';
 class App extends Component {
   constructor(props) {
     super(props);
@@ -75,7 +76,10 @@ class App extends Component {
   }
   onUpdateStatus=(value)=>{
     var {tasks}=this.state;
-    var index=this.findIndex(value);
+   // var index=this.findIndex(value);
+   var index=_.findIndex(tasks,(task)=>{
+     return task.id===value;
+   })
     if(index!==-1){
       tasks[index].status=!tasks[index].status;
       this.setState({
@@ -170,8 +174,11 @@ class App extends Component {
       })
     }
     if(keyword){
-      tasks=tasks.filter((task)=>{
-        return task.name.toLowerCase().indexOf(keyword)!==-1;
+      // tasks=tasks.filter((task)=>{
+      //   return task.name.toLowerCase().indexOf(keyword)!==-1;
+      // })
+      tasks=_.filter(tasks,(task)=>{
+        
       })
     }
     var elmTaskForm= (isDisplayTaskForm||isDisplayEditForm)?<TaskForm editTask={this.state.editTask} onCloseForm={this.onCloseForm} onSubmit={this.onSubmit}  isDisplayEditForm={this.state.isDisplayEditForm} />:'';
