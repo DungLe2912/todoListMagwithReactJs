@@ -4,13 +4,16 @@ import Search from './search'
 import Sort from './sort'
 import '../App.css'
 class control extends Component {
+    onClick=(sort)=>{
+        this.props.onClick(sort);
+    }
     render() {
         return (
             <div>
                 {/*Search*/}
                 <Search/>
                  {/*Sort*/}
-                 <Sort/>
+                 <Sort onClick={this.onClick}/>
             </div>
         );
     }

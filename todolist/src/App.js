@@ -15,6 +15,10 @@ class App extends Component {
       filter:{
         name:'',
         status:-1
+      },
+      sort:{
+        by:'name',
+        value:1
       }
     }
   }
@@ -122,8 +126,14 @@ class App extends Component {
       }
     })
   }
+  onClick=async(sort)=>{
+    await this.setState({
+      sort:sort
+    });
+   // console.log(this.state.sort);
+  }
   render() {
-    var {tasks,isDisplayTaskForm,isDisplayEditForm,filter}=this.state;
+    var {tasks,isDisplayTaskForm,isDisplayEditForm,filter,sort}=this.state;
     if(filter){
       if(filter.name){
         tasks=tasks.filter((task)=>{
@@ -137,6 +147,20 @@ class App extends Component {
         else{
           return task.status===(filter.status===1?true:false);
         }
+      })
+    }
+    if(sort.by==='name')
+    {
+      tasks.sort((a,b)=>{
+        if(a.name>b.name)return sort.value;
+          else if(a.name<b.name) return -sort.value;
+          else return 0;
+      })
+    }else{
+      tasks.sort((a,b)=>{
+        if(a.status>b.status)return -sort.value;
+          else if(a.status<b.status) return sort.value;
+          else return 0;
       })
     }
     var elmTaskForm= (isDisplayTaskForm||isDisplayEditForm)?<TaskForm editTask={this.state.editTask} onCloseForm={this.onCloseForm} onSubmit={this.onSubmit}  isDisplayEditForm={this.state.isDisplayEditForm} />:'';
@@ -164,7 +188,7 @@ class App extends Component {
            
             <hr/>
             <div className="row mt-15">
-             <Control/>
+             <Control onClick={this.onClick}/>
             </div>
             <hr/>
             <div className="row mt-15">
