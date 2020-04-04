@@ -16,7 +16,11 @@ class App extends Component {
         name:'',
         status:-1
       },
-      keyword:''
+      keyword:'',
+      sort:{
+        by:'name',
+        value:1
+      }
     }
   }
   componentWillMount(){
@@ -128,8 +132,14 @@ class App extends Component {
       keyword:keyword
     })
   }
+  onClick=async(sort)=>{
+    await this.setState({
+      sort:sort
+    });
+   // console.log(this.state.sort);
+  }
   render() {
-    var {tasks,isDisplayTaskForm,isDisplayEditForm,filter,keyword}=this.state;
+    var {tasks,isDisplayTaskForm,isDisplayEditForm,filter,keyword,sort}=this.state;
     if(filter){
       if(filter.name){
         tasks=tasks.filter((task)=>{
@@ -143,6 +153,20 @@ class App extends Component {
         else{
           return task.status===(filter.status===1?true:false);
         }
+      })
+    }
+    if(sort.by==='name')
+    {
+      tasks.sort((a,b)=>{
+        if(a.name>b.name)return sort.value;
+          else if(a.name<b.name) return -sort.value;
+          else return 0;
+      })
+    }else{
+      tasks.sort((a,b)=>{
+        if(a.status>b.status)return -sort.value;
+          else if(a.status<b.status) return sort.value;
+          else return 0;
       })
     }
     if(keyword){
@@ -175,7 +199,7 @@ class App extends Component {
            
             <hr/>
             <div className="row mt-15">
-             <Control onSearch={this.onSearch}/>
+             <Control onSearch={this.onSearch} onClick={this.onClick}/>
             </div>
             <hr/>
             <div className="row mt-15">
